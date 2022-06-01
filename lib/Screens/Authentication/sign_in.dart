@@ -7,7 +7,9 @@ import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -231,9 +233,9 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Forgot Password?"),
+                  const Text("Don't have an account?"),
                   TextButton(
-                    child: const Text("Click here",
+                    child: const Text("Sign Up",
                         style: TextStyle(color: Colors.black)),
                     onPressed: () {},
                   ),

@@ -5,15 +5,17 @@ class MyText extends StatelessWidget {
   final String input;
   FontWeight weight;
   double fontSize;
-  String fontFamily;
+  TextOverflow? overflow;
   String color;
+  int? maxLines;
 
   MyText(
       {Key? key,
+      this.maxLines,
+      this.overflow,
       required this.input,
       this.weight = FontWeight.normal,
       required this.fontSize,
-      this.fontFamily = "Nunito-Regular",
       this.color = "000000"})
       : super(key: key);
 
@@ -21,11 +23,10 @@ class MyText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       input,
+      maxLines: maxLines,
+      overflow: overflow,
       style: TextStyle(
-          fontSize: fontSize,
-          fontFamily: fontFamily,
-          fontWeight: weight,
-          color: HexColor(color)),
+          fontSize: fontSize, fontWeight: weight, color: HexColor(color)),
     );
   }
 }

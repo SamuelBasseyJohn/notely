@@ -35,7 +35,6 @@ class Favorites extends StatelessWidget {
           child: MyText(
             input: "Favorites",
             fontSize: 32,
-            fontFamily: "Nuntino-SemiBold",
           ),
         ),
         actions: [

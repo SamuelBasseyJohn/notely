@@ -20,10 +20,10 @@ class _NoteHomePageState extends State<NoteHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MyDrawer(),
-      backgroundColor: HexColor("FFFFFF"),
+      // backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 60,
-        backgroundColor: HexColor("FFFFFF"),
+        backgroundColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Icon(
@@ -42,8 +42,7 @@ class _NoteHomePageState extends State<NoteHomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: MyText(
             input: "Notely",
-            fontSize: 32,
-            fontFamily: "Nuntino-SemiBold",
+            fontSize: 35,
           ),
         ),
         actions: [
@@ -90,6 +89,7 @@ class _NoteHomePageState extends State<NoteHomePage> {
         child: Icon(
           Icons.add,
           size: 38,
+          color: Colors.white,
         ),
         elevation: 15,
         backgroundColor: HexColor("37474F"),
