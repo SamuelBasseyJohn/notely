@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -5,7 +6,9 @@ import 'package:simple_notes_app/Screens/home_page.dart';
 
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:simple_notes_app/main.dart';
 
+import '../../Widgets/utils_snackbar.dart';
 import 'after_login.dart';
 
 class SignUp extends StatefulWidget {
@@ -112,6 +115,8 @@ class _SignInState extends State<SignUp> {
                                   emailtc: _email.text,
                                   passwordtc: _password.text);
                             },
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               String pattern = r'\w+@\w+.\w+';
                               RegExp regex = RegExp(pattern);
@@ -203,7 +208,7 @@ class _SignInState extends State<SignUp> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              name();
+                              signUp();
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -223,10 +228,14 @@ class _SignInState extends State<SignUp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already got an account?"),
+                  const Text(
+                    "Already got an account?",
+                    style: TextStyle(fontSize: 18),
+                  ),
                   TextButton(
-                    child: const Text("Sign In",
-                        style: TextStyle(color: Colors.black)),
+                    child: Text("Sign In",
+                        style:
+                            TextStyle(fontSize: 18, color: HexColor("FA5B3D"))),
                     onPressed: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => AfterLogin()),
@@ -246,5 +255,26 @@ class _SignInState extends State<SignUp> {
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => const NoteHomePage()));
+  }
+
+  void signUp() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _email.text.trim(),
+        password: _password.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+
+      Utils.showSnackBar(e.message);
+    }
+    navigatorkey.currentState!.popUntil((route) => route.isFirst);
   }
 }
