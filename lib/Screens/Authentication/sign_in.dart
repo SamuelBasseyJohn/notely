@@ -1,10 +1,13 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors
+import 'package:simple_notes_app/Screens/Authentication/create%20account.dart';
 import 'package:simple_notes_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Screens/home_page.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../Widgets/utils_snackbar.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -44,7 +47,6 @@ class _LoginState extends State<Login> {
     return value!;
   }
 
-  String? myName;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -235,9 +237,10 @@ class _LoginState extends State<Login> {
                 children: [
                   const Text("Don't have an account?"),
                   TextButton(
-                    child: const Text("Sign Up",
-                        style: TextStyle(color: Colors.black)),
-                    onPressed: () {},
+                    child: Text("Sign Up",
+                        style: TextStyle(color: HexColor("FA5B3D"))),
+                    onPressed: () => Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => SignUp())),
                   ),
                 ],
               ),
@@ -261,6 +264,7 @@ class _LoginState extends State<Login> {
       );
     } on FirebaseAuthException catch (e) {
       print(e);
+      Utils.showSnackBar(e.message);
     }
     navigatorkey.currentState!.popUntil((route) => route.isFirst);
     // final input = await Navigator.push(

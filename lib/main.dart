@@ -8,11 +8,13 @@ import 'package:simple_notes_app/Screens/introduction_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:simple_notes_app/Firebase/firebase_options.dart';
 
+import 'Widgets/utils_snackbar.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final navigatorkey = GlobalKey<NavigatorState>();
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorkey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

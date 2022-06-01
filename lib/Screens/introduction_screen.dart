@@ -64,7 +64,7 @@ class _IntroScreenState extends State<IntroScreen> {
                             );
                           },
                           child: MyText(
-                            input: "Skip sign-up",
+                            input: "Continue Offline",
                             fontSize: 20,
                             color: "252525",
                           ),
