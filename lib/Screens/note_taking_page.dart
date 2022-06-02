@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
@@ -54,7 +55,10 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           toolbarHeight: 50,
           automaticallyImplyLeading: false,
           leading: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                createNote(title: title);
+                Navigator.pop(context);
+              },
               icon: const Icon(
                 Icons.arrow_back_ios_new,
                 color: Colors.black,
@@ -79,12 +83,12 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
                 ),
                 onpressed: () {
                   createNote(title: title);
-
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const SavedNotes()));
+                  Navigator.pop(context);
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) =>
+                  //             const SavedNotes()));
                   // reference.add(
                   //     {"title": title.text, "body": note.text}).whenComplete(
                   //   () => Navigator.pop(
@@ -139,7 +143,11 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
 
   Future createNote({required String title}) async {
     final docNote = FirebaseFirestore.instance.collection('notes').doc();
-    final note = Note(body: description, title: title, id: docNote.id);
+    final note = Note(
+        body: description,
+        title: title,
+        id: docNote.id,
+        email: FirebaseAuth.instance.currentUser!.email);
 
     final json = note.toJson();
     await docNote.set(json);

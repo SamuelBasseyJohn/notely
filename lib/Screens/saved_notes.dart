@@ -7,6 +7,7 @@ import 'package:simple_notes_app/Screens/home_page.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/drawer.dart';
 import '../Widgets/text.dart';
+import 'note_editing_page.dart';
 import 'note_taking_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -71,97 +72,118 @@ class _SavedNotesState extends State<SavedNotes> {
         //Font to use, SemiBold, regular,
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance.collection('notes').snapshots(),
-        builder: (context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        stream: FirebaseFirestore.instance
+            .collection('notes')
+            .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+            .snapshots(),
+        builder: (
+          context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
           if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 2,
-                  mainAxisExtent: 250),
-              itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (BuildContext context, index) {
-                final note = snapshot.data!.docs[index].data();
-                return InkWell(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const NoteTakingPage())),
-                  child: Container(
-                    margin: const EdgeInsets.all(20),
-                    padding: const EdgeInsets.all(15),
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: HexColor("FFFFFF"),
-                      // border: Border.all(
-                      //   width: 3,
-                      // ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.grey,
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: Offset(0, 2)),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Container(
-                        //   alignment: Alignment(1.3, -1.11),
-                        //   child: MyButton(
-                        //     icon: Icon(
-                        //       Icons.star_rounded,
-                        //       color: iconColor ? Colors.yellow : Colors.grey,
-                        //     ),
-                        //     onpressed: () {
-                        //       setState(() {
-                        //         iconColor == !iconColor;
-                        //       });
-                        //     },
-                        //   ),
+            if (snapshot.data!.docs.isNotEmpty) {
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 2,
+                    mainAxisExtent: 250),
+                itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (BuildContext context, index) {
+                  final note = snapshot.data!.docs[index].data();
+                  return InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NoteEditingPage())),
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(15),
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: HexColor("FFFFFF"),
+                        // border: Border.all(
+                        //   width: 3,
                         // ),
-                        ListTile(
-                            contentPadding: EdgeInsets.all(0),
-                            horizontalTitleGap: 0,
-                            trailing: MyButton(
-                              icon: Icon(
-                                Icons.star_rounded,
-                                color: iconColor ? Colors.yellow : Colors.grey,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.grey,
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(0, 2)),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Container(
+                          //   alignment: Alignment(1.3, -1.11),
+                          //   child: MyButton(
+                          //     icon: Icon(
+                          //       Icons.star_rounded,
+                          //       color: iconColor ? Colors.yellow : Colors.grey,
+                          //     ),
+                          //     onpressed: () {
+                          //       setState(() {
+                          //         iconColor == !iconColor;
+                          //       });
+                          //     },
+                          //   ),
+                          // ),
+                          ListTile(
+                              contentPadding: EdgeInsets.all(0),
+                              horizontalTitleGap: 0,
+                              trailing: MyButton(
+                                icon: Icon(
+                                  Icons.star_rounded,
+                                  color:
+                                      iconColor ? Colors.yellow : Colors.grey,
+                                ),
+                                onpressed: () {
+                                  setState(() {
+                                    iconColor == !iconColor;
+                                  });
+                                },
                               ),
-                              onpressed: () {
-                                setState(() {
-                                  iconColor == !iconColor;
-                                });
-                              },
-                            ),
-                            title: MyText(
-                                overflow: TextOverflow.ellipsis,
-                                input: note['title'] ??= "",
-                                fontSize: 23)),
-                        Container(
-                            alignment: Alignment(-1, -0.6),
-                            child: MyText(
-                                maxLines: 6,
-                                overflow: TextOverflow.ellipsis,
-                                input: note['description'] ??= "",
-                                fontSize: 15))
-                      ],
+                              title: MyText(
+                                  overflow: TextOverflow.ellipsis,
+                                  input: note['title'] ??= "",
+                                  fontSize: 23)),
+                          Container(
+                              alignment: Alignment(-1, -0.6),
+                              child: MyText(
+                                  maxLines: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                  input: note['description'] ??= "",
+                                  fontSize: 15))
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
+                  );
+                },
+              );
+            }
           }
-          return const NoteHomePage();
+          return Column(
+            // mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(child: Image.asset("Images/Add-notes-pana.png")),
+              SizedBox(
+                height: 10,
+              ),
+              MyText(input: "Create your first note!", fontSize: 20),
+              SizedBox(
+                height: 50,
+              )
+            ],
+          );
         },
       ),
 

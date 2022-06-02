@@ -7,6 +7,7 @@ import 'package:simple_notes_app/Screens/home_page.dart';
 import 'package:simple_notes_app/Screens/introduction_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:simple_notes_app/Firebase/firebase_options.dart';
+import 'package:simple_notes_app/Screens/saved_notes.dart';
 
 import 'Widgets/utils_snackbar.dart';
 
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
                   "Something went wrong, check your connection and try again"),
             );
           } else if (snapshot.hasData) {
-            return const NoteHomePage();
+            return const SavedNotes();
           } else {
             return const IntroScreen();
           }
