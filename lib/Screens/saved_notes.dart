@@ -101,7 +101,9 @@ class _SavedNotesState extends State<SavedNotes> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const NoteEditingPage())),
+                            builder: (context) => NoteEditingPage(
+                                  note: note,
+                                ))),
                     child: Container(
                       margin: const EdgeInsets.all(20),
                       padding: const EdgeInsets.all(15),

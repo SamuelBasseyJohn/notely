@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../Models/Note.dart';
 import '../Widgets/buttons.dart';
 
 class NoteEditingPage extends StatefulWidget {
-  const NoteEditingPage({Key? key}) : super(key: key);
+  final Map note;
+  const NoteEditingPage({Key? key, required this.note}) : super(key: key);
 
   @override
   State<NoteEditingPage> createState() => _NoteEditingPageState();
@@ -26,6 +29,8 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
 
   @override
   Widget build(BuildContext context) {
+    title = widget.note['title'];
+    description = widget.note['description'];
     return Form(
       key: _formKey,
       child: Scaffold(
@@ -33,11 +38,24 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
         appBar: AppBar(
           title: TextFormField(
             // validator: ,
-            controller: controllerTitle,
+            // controller: controllerTitle,
+            initialValue: title,
             onChanged: (value) {
               setState(() {
                 title = value;
               });
+            },
+            onSaved: (value) {
+              setState(() {
+                title = value!;
+              });
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "can't be empty";
+              } else {
+                return null;
+              }
             },
             style: TextStyle(fontSize: 27, color: HexColor("000000")),
             decoration: const InputDecoration(
@@ -47,14 +65,27 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                 fontSize: 27,
               ),
             ),
-            onSaved: (value) {},
+            // onSaved: (value) {},
           ),
           backgroundColor: HexColor("FFFFFF"),
           elevation: 2,
           toolbarHeight: 50,
           automaticallyImplyLeading: false,
           leading: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  updateNote(
+                      update: Note(
+                          body: description,
+                          title: title,
+                          email: FirebaseAuth.instance.currentUser!.email,
+                          id: widget.note['id']));
+                  Navigator.pop(context);
+                } else {
+                  return;
+                }
+              },
               icon: const Icon(
                 Icons.arrow_back_ios_new,
                 color: Colors.black,
@@ -73,13 +104,26 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                 color: Colors.black,
               ),
             ),
-            MyButton(
+            IconButton(
                 icon: const Icon(
                   Icons.save_as_outlined,
                 ),
-                onpressed: () {
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    updateNote(
+                        update: Note(
+                            body: description,
+                            title: title,
+                            email: FirebaseAuth.instance.currentUser!.email,
+                            id: widget.note['id']));
+                    Navigator.pop(context);
+                  } else {
+                    return;
+                  }
+
                   // createNote(title: title);
-                  Navigator.pop(context);
+
                   // Navigator.pushReplacement(
                   //     context,
                   //     MaterialPageRoute(
@@ -114,10 +158,23 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                 style: TextStyle(fontSize: 20, color: HexColor("000000")),
                 maxLines: null,
                 // validator: ,
-                controller: controllerBody,
+                // controller: controllerBody,
+                initialValue: description,
                 onChanged: (value) {
                   setState(() {
                     description = value;
+                  });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "can't be empty";
+                  } else {
+                    return null;
+                  }
+                },
+                onSaved: (value) {
+                  setState(() {
+                    description = value!;
                   });
                 },
                 expands: false,
@@ -128,12 +185,18 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                   border: InputBorder.none,
                   hintText: "Type something...",
                 ),
-                onSaved: (value) {},
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future updateNote({required Note update}) async {
+    final docNote =
+        FirebaseFirestore.instance.collection('notes').doc(widget.note['id']);
+
+    await docNote.update(update.toJson());
   }
 }
