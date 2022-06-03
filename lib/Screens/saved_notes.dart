@@ -60,7 +60,7 @@ class _SavedNotesState extends State<SavedNotes> {
           ),
           MyButton(
             icon: const Icon(
-              Icons.settings,
+              Icons.info_outline,
               color: Colors.black,
             ),
             onpressed: () {},
@@ -97,7 +97,8 @@ class _SavedNotesState extends State<SavedNotes> {
                 scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, index) {
                   final note = snapshot.data!.docs[index].data();
-                  return InkWell(
+                  return GestureDetector(
+                    onLongPress: (() {}),
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -145,7 +146,7 @@ class _SavedNotesState extends State<SavedNotes> {
                                 icon: Icon(
                                   Icons.star_rounded,
                                   color:
-                                      iconColor ? Colors.yellow : Colors.grey,
+                                      iconColor ? Colors.grey : Colors.yellow,
                                 ),
                                 onpressed: () {
                                   setState(() {

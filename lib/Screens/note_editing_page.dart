@@ -121,28 +121,6 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                   } else {
                     return;
                   }
-
-                  // createNote(title: title);
-
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) =>
-                  //             const SavedNotes()));
-                  // reference.add(
-                  //     {"title": title.text, "body": note.text}).whenComplete(
-                  //   () => Navigator.pop(
-                  //     context,
-                  //     // MaterialPageRoute(
-                  //     //   builder: (context) => const SavedNotes(),
-                  //     // ),
-                  //   ),
-                  // );
-                  // print("hello");
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => const SavedNotes()));
                 }),
             const SizedBox(
               width: 21,
