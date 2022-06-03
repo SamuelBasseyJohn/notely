@@ -67,12 +67,6 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           actions: [
             MyButton(
               icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-            MyButton(
-              icon: const Icon(
                 Icons.star_border_rounded,
                 color: Colors.black,
               ),
@@ -84,25 +78,6 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
                 onpressed: () {
                   createNote(title: title);
                   Navigator.pop(context);
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) =>
-                  //             const SavedNotes()));
-                  // reference.add(
-                  //     {"title": title.text, "body": note.text}).whenComplete(
-                  //   () => Navigator.pop(
-                  //     context,
-                  //     // MaterialPageRoute(
-                  //     //   builder: (context) => const SavedNotes(),
-                  //     // ),
-                  //   ),
-                  // );
-                  // print("hello");
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => const SavedNotes()));
                 }),
             const SizedBox(
               width: 21,

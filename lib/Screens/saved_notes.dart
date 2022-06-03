@@ -1,3 +1,4 @@
+import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -31,17 +32,17 @@ class _SavedNotesState extends State<SavedNotes> {
         backgroundColor: HexColor("FFFFFF"),
         elevation: 0,
         automaticallyImplyLeading: false,
-        leading: const Icon(
-          Icons.menu,
-          color: Colors.black,
+        leading: Builder(
+          builder: (context) => IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              }),
         ),
-        // leading: IconButton(
-        //   onPressed: (() {
-        //     // _globalKey.currentState?.openDrawer();
-        //   }),
-        //   icon: Icon(Icons.menu),
-        //   color: HexColor("000000"),
-        // ),
+        //
         centerTitle: false,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -87,18 +88,18 @@ class _SavedNotesState extends State<SavedNotes> {
           }
           if (snapshot.hasData) {
             if (snapshot.data!.docs.isNotEmpty) {
-              return GridView.builder(
+              return DragSelectGridView(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 2,
                     mainAxisExtent: 250),
                 itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (BuildContext context, index) {
+                itemBuilder: (BuildContext context, index, isSelected) {
                   final note = snapshot.data!.docs[index].data();
+                  final edit = snapshot.data!.docs[index].data();
                   return GestureDetector(
-                    onLongPress: (() {}),
+                    onLongPress: () {},
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -125,43 +126,30 @@ class _SavedNotesState extends State<SavedNotes> {
                       ),
                       child: Column(
                         children: [
-                          // Container(
-                          //   alignment: Alignment(1.3, -1.11),
-                          //   child: MyButton(
-                          //     icon: Icon(
-                          //       Icons.star_rounded,
-                          //       color: iconColor ? Colors.yellow : Colors.grey,
-                          //     ),
-                          //     onpressed: () {
-                          //       setState(() {
-                          //         iconColor == !iconColor;
-                          //       });
-                          //     },
-                          //   ),
-                          // ),
                           ListTile(
-                              contentPadding: EdgeInsets.all(0),
-                              horizontalTitleGap: 0,
-                              trailing: MyButton(
-                                icon: Icon(
-                                  Icons.star_rounded,
-                                  color:
-                                      iconColor ? Colors.grey : Colors.yellow,
-                                ),
-                                onpressed: () {
-                                  setState(() {
-                                    iconColor == !iconColor;
-                                  });
-                                },
-                              ),
-                              title: MyText(
-                                  overflow: TextOverflow.ellipsis,
-                                  input: note['title'] ??= "",
-                                  fontSize: 23)),
+                            contentPadding: EdgeInsets.all(0),
+                            horizontalTitleGap: 0,
+                            trailing: MyButton(
+                              icon: Icon(Icons.delete, color: Colors.grey),
+                              onpressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('notes')
+                                    .doc(note['id'])
+                                    .delete();
+                              },
+                            ),
+                            title: MyText(
+                                overflow: TextOverflow.ellipsis,
+                                input: note['title'] ??= "",
+                                fontSize: 23),
+                          ),
+                          Divider(
+                            color: Colors.black,
+                          ),
                           Container(
                               alignment: Alignment(-1, -0.6),
                               child: MyText(
-                                  maxLines: 6,
+                                  maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
                                   input: note['description'] ??= "",
                                   fontSize: 15))
@@ -177,7 +165,7 @@ class _SavedNotesState extends State<SavedNotes> {
             // mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(child: Image.asset("Images/Add-notes-pana.png")),
+              Center(child: Image.asset("Images/Design-inspiration-pana.png")),
               SizedBox(
                 height: 10,
               ),

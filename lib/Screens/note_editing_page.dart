@@ -94,15 +94,10 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
           actions: [
             MyButton(
               icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-            MyButton(
-              icon: const Icon(
                 Icons.star_border_rounded,
                 color: Colors.black,
               ),
+              onpressed: () {},
             ),
             IconButton(
                 icon: const Icon(

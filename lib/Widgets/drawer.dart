@@ -19,7 +19,7 @@ class _MyDrawerState extends State<MyDrawer> {
           // borderRadius: BorderRadius.only(
           //     topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
           ),
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       child: ListView(
         children: [
           DrawerHeader(
@@ -28,17 +28,21 @@ class _MyDrawerState extends State<MyDrawer> {
               duration: const Duration(milliseconds: 250),
               child: ListView(children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 50,
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ListTile(
+                      title: MyText(input: 'Notely', fontSize: 45),
+                      dense: false,
                     ),
                     ListTile(
                       title: Text(
                         user.email!,
                         style: TextStyle(fontSize: 12),
                       ),
-                      dense: true,
+                      dense: false,
                     )
                   ],
                 ),
