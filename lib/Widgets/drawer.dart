@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_notes_app/Screens/favorites_page.dart';
+import 'package:simple_notes_app/Screens/introduction_screen.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 
@@ -67,23 +68,25 @@ class _MyDrawerState extends State<MyDrawer> {
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const Favorites())),
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.settings,
-              size: 30,
-            ),
-            title: MyText(input: "Settings", fontSize: 20),
-            onTap: () {
-              Navigator.pushNamed(context, '/Settings');
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.settings,
+          //     size: 30,
+          //   ),
+          //   title: MyText(input: "Settings", fontSize: 20),
+          //   onTap: () {
+          //     Navigator.pushNamed(context, '/Settings');
+          //   },
+          // ),
           ListTile(
             leading: const Icon(
               Icons.exit_to_app_sharp,
               size: 30,
             ),
             title: MyText(input: "Sign-out", fontSize: 20),
-            onTap: () => FirebaseAuth.instance.signOut(),
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+            },
           ),
           Divider(
             color: Colors.grey[600],

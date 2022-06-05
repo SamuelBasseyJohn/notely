@@ -8,6 +8,7 @@ class Utils {
     if (text == null) return;
 
     final snackBar = SnackBar(
+      duration: const Duration(seconds: 1),
       content: Text(text),
       backgroundColor: HexColor("FA5B3D"),
     );

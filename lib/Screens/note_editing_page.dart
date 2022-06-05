@@ -17,6 +17,7 @@ class NoteEditingPage extends StatefulWidget {
 class _NoteEditingPageState extends State<NoteEditingPage> {
   CollectionReference reference =
       FirebaseFirestore.instance.collection("notes");
+
   String title = '';
   String description = '';
   final TextEditingController controllerBody = TextEditingController();
@@ -77,6 +78,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                   _formKey.currentState!.save();
                   updateNote(
                       update: Note(
+                          timeAdded: DateTime.now().toString(),
                           body: description,
                           title: title,
                           email: FirebaseAuth.instance.currentUser!.email,
@@ -108,6 +110,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                     _formKey.currentState!.save();
                     updateNote(
                         update: Note(
+                            timeAdded: DateTime.now().toString(),
                             body: description,
                             title: title,
                             email: FirebaseAuth.instance.currentUser!.email,

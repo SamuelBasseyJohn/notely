@@ -2,11 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/Widgets/buttons.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:simple_notes_app/main.dart';
-import '../Widgets/text.dart';
+
 import 'package:simple_notes_app/Models/note.dart';
 
 class NoteTakingPage extends StatefulWidget {
@@ -56,8 +53,13 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           automaticallyImplyLeading: false,
           leading: IconButton(
               onPressed: () {
-                createNote(title: title);
-                Navigator.pop(context);
+                if (controllerBody.text.isEmpty &&
+                    controllerTitle.text.isEmpty) {
+                  Navigator.pop(context);
+                } else {
+                  createNote(title: title);
+                  Navigator.pop(context);
+                }
               },
               icon: const Icon(
                 Icons.arrow_back_ios_new,
@@ -119,6 +121,7 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
   Future createNote({required String title}) async {
     final docNote = FirebaseFirestore.instance.collection('notes').doc();
     final note = Note(
+        timeAdded: DateTime.now().toString(),
         body: description,
         title: title,
         id: docNote.id,

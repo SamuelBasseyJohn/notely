@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       scaffoldMessengerKey: Utils.messengerKey,
       navigatorKey: navigatorkey,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Notely',
       theme: ThemeData(
         primarySwatch: Colors.grey,
         brightness: Brightness.light,
