@@ -1,4 +1,4 @@
-# simple_notes_app
+# notely
 
 A new Flutter project.
 
