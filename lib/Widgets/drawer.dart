@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_notes_app/Screens/favorites_page.dart';
+import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -48,6 +49,15 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ])),
           const Divider(),
+          ListTile(
+            leading: const Icon(
+              Icons.book,
+              size: 30,
+            ),
+            title: MyText(input: "All notes", fontSize: 20),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const SavedNotes())),
+          ),
           ListTile(
             leading: const Icon(
               Icons.star_border_rounded,

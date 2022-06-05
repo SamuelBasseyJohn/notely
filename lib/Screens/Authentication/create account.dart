@@ -21,6 +21,7 @@ class SignUp extends StatefulWidget {
 class _SignInState extends State<SignUp> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  final TextEditingController _name = TextEditingController();
   bool? checkboxValue = false;
   bool _isVisible = false;
 
@@ -28,15 +29,20 @@ class _SignInState extends State<SignUp> {
   bool isEmpty = true;
   Color colorFn(
       {String? emailtc,
+      // String? nametc,
       String? passwordtc,
       Color changedColor = const Color.fromARGB(255, 249, 90, 46)}) {
-    if (emailtc!.isNotEmpty && passwordtc!.isNotEmpty) {
+    if (emailtc!.isNotEmpty && passwordtc!.isNotEmpty
+        //  && nametc!.isNotEmpty
+        ) {
       setState(() {
         value = changedColor;
         print(value);
       });
       return value!;
-    } else if (emailtc.isEmpty || passwordtc!.isEmpty) {
+    } else if (emailtc.isEmpty || passwordtc!.isEmpty
+        // || nametc!.isEmpty
+        ) {
       setState(() {
         value = Colors.grey;
         print(value);
@@ -94,6 +100,48 @@ class _SignInState extends State<SignUp> {
                         SizedBox(
                           height: 20,
                         ),
+                        // Row(
+                        //   children: [
+                        //     Padding(
+                        //         padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        //         child: MyText(input: "Name:", fontSize: 20)),
+                        //   ],
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(
+                        //     20.0,
+                        //     5.0,
+                        //     20.0,
+                        //     15.0,
+                        //   ),
+                        //   child: TextFormField(
+                        //     onChanged: (value) {
+                        //       colorFn(
+                        //           nametc: _name.text,
+                        //           emailtc: _email.text,
+                        //           passwordtc: _password.text);
+                        //     },
+                        //     validator: (value) {
+                        //       String pattern = r'[A-Z]';
+                        //       RegExp regex = RegExp(pattern);
+                        //       if (value == null || value.isEmpty) {
+                        //         return "Enter your name";
+                        //       } else if (!regex.hasMatch(value) &&
+                        //           value.contains(RegExp(r'[0-9]'))) {
+                        //         return "Is that even a name?";
+                        //       } else {
+                        //         return null;
+                        //       }
+                        //     },
+                        //     keyboardType: TextInputType.emailAddress,
+                        //     controller: _name,
+                        //     decoration: const InputDecoration(
+                        //       prefixIcon: Icon(Icons.mail),
+                        //       hintText: "Name",
+                        //       border: OutlineInputBorder(),
+                        //     ),
+                        //   ),
+                        // ),
                         Row(
                           children: [
                             Padding(
@@ -112,11 +160,10 @@ class _SignInState extends State<SignUp> {
                           child: TextFormField(
                             onChanged: (value) {
                               colorFn(
+                                  // nametc: _name.text,
                                   emailtc: _email.text,
                                   passwordtc: _password.text);
                             },
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
                             validator: (value) {
                               String pattern = r'\w+@\w+.\w+';
                               RegExp regex = RegExp(pattern);
@@ -158,6 +205,7 @@ class _SignInState extends State<SignUp> {
                           child: TextFormField(
                             onChanged: (value) {
                               colorFn(
+                                  // nametc: _name.text,
                                   emailtc: _email.text,
                                   passwordtc: _password.text);
                             },

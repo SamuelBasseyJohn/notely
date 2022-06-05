@@ -72,6 +72,7 @@ class _SavedNotesState extends State<SavedNotes> {
         ],
         //Font to use, SemiBold, regular,
       ),
+      //Stream builder
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection('notes')

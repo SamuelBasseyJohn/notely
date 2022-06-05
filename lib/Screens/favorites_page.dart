@@ -18,9 +18,15 @@ class Favorites extends StatelessWidget {
         backgroundColor: HexColor("FFFFFF"),
         elevation: 0,
         automaticallyImplyLeading: false,
-        leading: const Icon(
-          Icons.menu,
-          color: Colors.black,
+        leading: Builder(
+          builder: (context) => IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              }),
         ),
         // leading: IconButton(
         //   onPressed: (() {
