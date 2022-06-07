@@ -86,7 +86,7 @@ class _SavedNotesState extends State<SavedNotes> {
         //Font to use, SemiBold, regular,
       ),
       //Stream builder
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance

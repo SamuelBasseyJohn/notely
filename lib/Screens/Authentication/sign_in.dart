@@ -3,10 +3,8 @@ import 'package:simple_notes_app/Screens/Authentication/create%20account.dart';
 import 'package:simple_notes_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:simple_notes_app/Screens/home_page.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../Widgets/utils_snackbar.dart';
 
 class Login extends StatefulWidget {
@@ -33,14 +31,11 @@ class _LoginState extends State<Login> {
     if (emailtc!.isNotEmpty && passwordtc!.isNotEmpty) {
       setState(() {
         value = changedColor;
-        print(value);
       });
       return value!;
     } else if (emailtc.isEmpty || passwordtc!.isEmpty) {
       setState(() {
         value = Colors.grey;
-        print(value);
-        print(passwordtc);
       });
       return value!;
     }
@@ -202,7 +197,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        // ignore: prefer_const_constructors
+
                         SizedBox(
                           height: 10,
                         ),
@@ -215,7 +210,7 @@ class _LoginState extends State<Login> {
                             // if (_formKey.currentState!.validate()) {
                             //   Signin();
                             // }
-                            print("Taptap");
+
                             Signin();
                           },
                           style: ElevatedButton.styleFrom(
@@ -263,6 +258,7 @@ class _LoginState extends State<Login> {
         password: _password.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
+      // ignore: avoid_print
       print(e);
       Utils.showSnackBar(e.message);
     }

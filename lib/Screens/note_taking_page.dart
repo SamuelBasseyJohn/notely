@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_notes_app/Providers/favorite_provider.dart';
 import 'package:simple_notes_app/Widgets/buttons.dart';
 import 'package:simple_notes_app/Models/note.dart';
 
@@ -84,6 +83,7 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           actions: [
             //Save Notes
             Consumer(
+              // ignore: non_constant_identifier_names
               builder: (context, IsFavoriteProvider, child) => MyButton(
                   icon: const Icon(
                     Icons.save_as_outlined,

@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Screens/favorites_page.dart';
-import 'package:simple_notes_app/Screens/introduction_screen.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 
@@ -33,7 +31,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     ListTile(
@@ -43,7 +41,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     ListTile(
                       title: Text(
                         user.email!,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       dense: false,
                     )
@@ -61,7 +59,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 MaterialPageRoute(builder: (context) => const SavedNotes())),
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.star_border_rounded,
               size: 32,
             ),

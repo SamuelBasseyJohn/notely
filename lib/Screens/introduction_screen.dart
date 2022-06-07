@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_1.dart';
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_2.dart';
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_3.dart';
-
-import 'package:simple_notes_app/Screens/home_page.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -20,7 +15,7 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   //Page controller to controle the amount of pages we have and the apage we are currently on.
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   //Boolean value to handle if we are on the last page or not
   bool lastPage = false;
@@ -37,7 +32,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 lastPage = (index == 2);
               });
             },
-            children: [
+            children: const [
               IntroPage1(),
               IntroPage2(),
               IntroPage3(),

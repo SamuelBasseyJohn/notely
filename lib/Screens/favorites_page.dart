@@ -4,14 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Widgets/drawer.dart';
-
 import '../Models/Note.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/text.dart';
 import '../Widgets/utils_snackbar.dart';
 import 'EditingPages/fav_note_edit_page.dart';
-import 'EditingPages/note_editing_page.dart';
-import 'note_taking_page.dart';
 
 class Favorites extends StatefulWidget {
   const Favorites({Key? key}) : super(key: key);
@@ -181,7 +178,7 @@ class _FavoritesState extends State<Favorites> {
                                                   final json =
                                                       thisNote.toJson();
                                                   await docNote.update(json);
-                                                  print('Added to favorites');
+
                                                   Utils.showSnackBar(
                                                     'Removed from Favorites!',
                                                   );

@@ -22,6 +22,8 @@ class SignUp extends StatefulWidget {
 class _SignInState extends State<SignUp> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+
+  // ignore: unused_field
   final TextEditingController _name = TextEditingController();
   bool? checkboxValue = false;
   bool _isVisible = false;
@@ -38,7 +40,6 @@ class _SignInState extends State<SignUp> {
         ) {
       setState(() {
         value = changedColor;
-        print(value);
       });
       return value!;
     } else if (emailtc.isEmpty || passwordtc!.isEmpty
@@ -46,8 +47,6 @@ class _SignInState extends State<SignUp> {
         ) {
       setState(() {
         value = Colors.grey;
-        print(value);
-        print(passwordtc);
       });
       return value!;
     }
@@ -85,7 +84,7 @@ class _SignInState extends State<SignUp> {
                         Row(
                           children: [
                             Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 25.0),
                                 child: MyText(
                                   input: "Sign Up",
@@ -98,7 +97,7 @@ class _SignInState extends State<SignUp> {
                         const Divider(
                           color: Colors.black,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         // Row(

@@ -2,11 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
-
 import '../../Models/Note.dart';
-import '../../Providers/favorite_provider.dart';
-import '../../Widgets/buttons.dart';
 import '../../Widgets/utils_snackbar.dart';
 
 class NoteEditingPage extends StatefulWidget {
@@ -32,7 +28,6 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
 
   @override
   Widget build(BuildContext context) {
-    IsFavoriteProvider provider = Provider.of<IsFavoriteProvider>(context);
     title = widget.note['title'];
     description = widget.note['description'];
     return Form(
@@ -152,7 +147,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                   });
                 },
                 expands: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintStyle: TextStyle(
                     fontSize: 20,
                   ),
@@ -193,7 +188,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
 
     final json = favNote.toJson();
     await favDocNote.set(json);
-    print('Added to favorites');
+
     Utils.showSnackBar('Added to Favorites!');
   }
 }

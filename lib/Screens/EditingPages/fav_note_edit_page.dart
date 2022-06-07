@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-
 import '../../Models/Note.dart';
-import '../../Widgets/buttons.dart';
 
 class FavNoteEditingPage extends StatefulWidget {
   final Map favNote;

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:simple_notes_app/Screens/note_taking_page.dart';
-
 import 'package:simple_notes_app/Widgets/buttons.dart';
 import 'package:simple_notes_app/Widgets/drawer.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
@@ -20,7 +17,7 @@ class _AboutNotelyState extends State<AboutNotely> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: MyDrawer(),
+      drawer: const MyDrawer(),
       // backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 60,
@@ -28,7 +25,7 @@ class _AboutNotelyState extends State<AboutNotely> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: MyButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black,
           ),
@@ -45,11 +42,11 @@ class _AboutNotelyState extends State<AboutNotely> {
         children: [
           MyText(input: 'Notely', fontSize: 50),
           Center(child: Image.asset("Images/Notes-amico.png")),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           MyText(input: "Version: 1.0.0", fontSize: 20),
-          SizedBox(
+          const SizedBox(
             height: 50,
           )
         ],
