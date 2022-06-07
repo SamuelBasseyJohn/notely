@@ -5,14 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Widgets/drawer.dart';
 
+import '../Models/Note.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/text.dart';
-import 'note_editing_page.dart';
+import '../Widgets/utils_snackbar.dart';
+import 'EditingPages/fav_note_edit_page.dart';
+import 'EditingPages/note_editing_page.dart';
 import 'note_taking_page.dart';
 
-class Favorites extends StatelessWidget {
+class Favorites extends StatefulWidget {
   const Favorites({Key? key}) : super(key: key);
 
+  @override
+  State<Favorites> createState() => _FavoritesState();
+}
+
+class _FavoritesState extends State<Favorites> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,13 +41,7 @@ class Favorites extends StatelessWidget {
                 Scaffold.of(context).openDrawer();
               }),
         ),
-        // leading: IconButton(
-        //   onPressed: (() {
-        //     // _globalKey.currentState?.openDrawer();
-        //   }),
-        //   icon: Icon(Icons.menu),
-        //   color: HexColor("000000"),
-        // ),
+
         centerTitle: false,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -48,20 +50,13 @@ class Favorites extends StatelessWidget {
             fontSize: 32,
           ),
         ),
-        actions: [
-          MyButton(icon: const Icon(Icons.search)),
-          MyButton(icon: const Icon(Icons.delete)),
-          const SizedBox(
-            width: 21,
-          ),
-        ],
+
         //Font to use, SemiBold, regular,
       ),
-
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection('favorites')
-            .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+            .collection('notes')
+            .where('isFavorite', isEqualTo: true)
             .snapshots(),
         builder: (
           context,
@@ -83,18 +78,22 @@ class Favorites extends StatelessWidget {
                 itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
                 itemBuilder: (BuildContext context, index, isSelected) {
                   final note = snapshot.data!.docs[index].data();
+                  // ignore: unused_local_variable
                   final edit = snapshot.data!.docs[index].data();
                   return GestureDetector(
                     onLongPress: () {},
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => NoteEditingPage(
-                                  note: note,
+                            builder: (context) => FavNoteEditingPage(
+                                  favNote: note,
                                 ))),
                     child: Container(
-                      margin: const EdgeInsets.all(20),
-                      padding: const EdgeInsets.all(15),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      padding: const EdgeInsets.all(13),
                       height: 100,
                       decoration: BoxDecoration(
                         color: HexColor("FFFFFF"),
@@ -112,33 +111,113 @@ class Favorites extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
+                          //Title
                           ListTile(
-                            contentPadding: EdgeInsets.all(0),
+                            subtitle:
+                                MyText(input: note['timeAdded'], fontSize: 8),
+                            contentPadding: const EdgeInsets.all(0),
                             horizontalTitleGap: 0,
                             trailing: MyButton(
-                              icon: Icon(Icons.delete, color: Colors.grey),
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.grey,
+                                size: 25,
+                              ),
                               onpressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('notes')
-                                    .doc(note['id'])
-                                    .delete();
+                                // FirebaseFirestore.instance
+                                //     .collection('notes')
+                                //     .doc(note['id'])
+                                //     .delete();
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (context) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    title: MyText(
+                                        input:
+                                            'Remove this note from favorites ?',
+                                        fontSize: 20),
+                                    actions: [
+                                      //Actions, Cancel or Delete
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: MyText(
+                                                color: "FA5B3D",
+                                                input: 'Cancel',
+                                                fontSize: 15),
+                                          ),
+                                          MyText(input: '|', fontSize: 15),
+                                          TextButton(
+
+                                              // Delete Note
+                                              onPressed: () {
+                                                Future
+                                                    removeFromFavorites() async {
+                                                  final docNote =
+                                                      FirebaseFirestore.instance
+                                                          .collection('notes')
+                                                          .doc(note['id']);
+
+                                                  final thisNote = Note(
+                                                      isFavorite: false,
+                                                      timeAdded: DateTime.now()
+                                                          .toString(),
+                                                      body: note['description'],
+                                                      title: note['title'],
+                                                      id: docNote.id,
+                                                      email: FirebaseAuth
+                                                          .instance
+                                                          .currentUser!
+                                                          .email);
+
+                                                  final json =
+                                                      thisNote.toJson();
+                                                  await docNote.update(json);
+                                                  print('Added to favorites');
+                                                  Utils.showSnackBar(
+                                                    'Removed from Favorites!',
+                                                  );
+                                                }
+
+                                                removeFromFavorites();
+
+                                                Navigator.pop(context);
+                                              },
+                                              child: MyText(
+                                                  color: "FA5B3D",
+                                                  input: 'Remove',
+                                                  fontSize: 15)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
                               },
                             ),
                             title: MyText(
                                 overflow: TextOverflow.ellipsis,
-                                input: note['title'] ??= "",
-                                fontSize: 23),
+                                input: note['title'] ??= "No title",
+                                fontSize: 25),
                           ),
-                          Divider(
+                          const Divider(
                             color: Colors.black,
                           ),
                           Container(
-                              alignment: Alignment(-1, -0.6),
-                              child: MyText(
-                                  maxLines: 5,
-                                  overflow: TextOverflow.ellipsis,
-                                  input: note['description'] ??= "",
-                                  fontSize: 15))
+                            alignment: const Alignment(-1, -0.6),
+                            child: MyText(
+                                maxLines: 5,
+                                overflow: TextOverflow.ellipsis,
+                                input: note['description'] ??= "",
+                                fontSize: 15.02),
+                          ),
                         ],
                       ),
                     ),
@@ -147,45 +226,11 @@ class Favorites extends StatelessWidget {
               );
             }
           }
-          return Column(
-            // mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(child: Image.asset("Images/Design-inspiration-pana.png")),
-              SizedBox(
-                height: 10,
-              ),
-              MyText(input: "Create your first note!", fontSize: 20),
-              SizedBox(
-                height: 50,
-              )
-            ],
+          return Center(
+            child: MyText(input: "No favorite note yet!", fontSize: 20),
           );
         },
       ),
-
-      //Column(
-      //   // mainAxisSize: MainAxisSize.max,
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [],
-      // ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => const NoteTakingPage(),
-      //       ),
-      //     );
-      //   },
-      //   child: const Icon(
-      //     Icons.add,
-      //     size: 38,
-      //     color: Colors.white,
-      //   ),
-      //   elevation: 15,
-      //   backgroundColor: HexColor("37474F"),
-      // ),
     );
   }
 }

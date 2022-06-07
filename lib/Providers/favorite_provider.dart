@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:simple_notes_app/Models/favorites.dart';
 
-class FavoriteProvider with ChangeNotifier {
-  final Map<String, FavoriteNote> _favoriteNotes = {};
-  Map<String, FavoriteNote> get favoriteNotes => {..._favoriteNotes};
+class IsFavoriteProvider extends ChangeNotifier {
+  bool isFavorite = false;
 
-  void addItemToFavorite(
-    String id,
-    String title,
-    String description,
-    String email,
-    String timeAdded,
-  ) {}
+  bool makeFavorite() {
+    bool makeFavorite = !isFavorite;
+    notifyListeners();
+    return makeFavorite;
+  }
+
+  bool removeFavorite() {
+    bool makeFavorite = isFavorite;
+    notifyListeners();
+    return makeFavorite;
+  }
 }

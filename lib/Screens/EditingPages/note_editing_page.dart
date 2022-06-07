@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 
-import '../Models/Note.dart';
-import '../Widgets/buttons.dart';
+import '../../Models/Note.dart';
+import '../../Providers/favorite_provider.dart';
+import '../../Widgets/buttons.dart';
+import '../../Widgets/utils_snackbar.dart';
 
 class NoteEditingPage extends StatefulWidget {
   final Map note;
@@ -15,14 +18,13 @@ class NoteEditingPage extends StatefulWidget {
 }
 
 class _NoteEditingPageState extends State<NoteEditingPage> {
-  CollectionReference reference =
-      FirebaseFirestore.instance.collection("notes");
-
+  final reference = FirebaseFirestore.instance.collection("notes").doc();
   String title = '';
   String description = '';
   final TextEditingController controllerBody = TextEditingController();
   final TextEditingController controllerTitle = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool starFavorite = false;
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
 
   @override
   Widget build(BuildContext context) {
+    IsFavoriteProvider provider = Provider.of<IsFavoriteProvider>(context);
     title = widget.note['title'];
     description = widget.note['description'];
     return Form(
@@ -78,6 +81,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                   _formKey.currentState!.save();
                   updateNote(
                       update: Note(
+                          isFavorite: false,
                           timeAdded: DateTime.now().toString(),
                           body: description,
                           title: title,
@@ -94,13 +98,6 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
               )),
 
           actions: [
-            MyButton(
-              icon: const Icon(
-                Icons.star_border_rounded,
-                color: Colors.black,
-              ),
-              onpressed: () {},
-            ),
             IconButton(
                 icon: const Icon(
                   Icons.save_as_outlined,
@@ -110,6 +107,7 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
                     _formKey.currentState!.save();
                     updateNote(
                         update: Note(
+                            isFavorite: false,
                             timeAdded: DateTime.now().toString(),
                             body: description,
                             title: title,
@@ -169,10 +167,33 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
     );
   }
 
-  Future updateNote({required Note update}) async {
+  Future updateNote({
+    required Note update,
+  }) async {
     final docNote =
         FirebaseFirestore.instance.collection('notes').doc(widget.note['id']);
 
     await docNote.update(update.toJson());
+  }
+
+  //Add to Favorites Method
+  Future addToFavorites() async {
+    final docNote = FirebaseFirestore.instance
+        .collection('notes')
+        .doc(FirebaseAuth.instance.currentUser!.email);
+    final favDocNote =
+        docNote.collection('favorite notes').doc(widget.note['id']);
+    final favNote = Note(
+        isFavorite: false,
+        timeAdded: DateTime.now().toString(),
+        body: description,
+        title: title,
+        id: docNote.id,
+        email: FirebaseAuth.instance.currentUser!.email);
+
+    final json = favNote.toJson();
+    await favDocNote.set(json);
+    print('Added to favorites');
+    Utils.showSnackBar('Added to Favorites!');
   }
 }

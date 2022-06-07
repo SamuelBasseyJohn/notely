@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import 'package:simple_notes_app/Screens/home_page.dart';
+import 'package:simple_notes_app/Screens/saved_notes.dart';
 
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -302,7 +303,7 @@ class _SignInState extends State<SignUp> {
     final input = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => const NoteHomePage()));
+            builder: (BuildContext context) => const SavedNotes()));
   }
 
   void signUp() async {

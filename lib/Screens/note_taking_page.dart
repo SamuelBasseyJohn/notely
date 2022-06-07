@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_notes_app/Providers/favorite_provider.dart';
 import 'package:simple_notes_app/Widgets/buttons.dart';
-
 import 'package:simple_notes_app/Models/note.dart';
 
 class NoteTakingPage extends StatefulWidget {
@@ -14,16 +15,31 @@ class NoteTakingPage extends StatefulWidget {
 }
 
 class _NoteTakingPageState extends State<NoteTakingPage> {
-  CollectionReference reference =
-      FirebaseFirestore.instance.collection("notes");
+  final reference =
+      FirebaseFirestore.instance.collection("notes").doc('isFavorite');
   String title = '';
   String description = '';
   final TextEditingController controllerBody = TextEditingController();
   final TextEditingController controllerTitle = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
+    Future createNote({
+      required String title,
+    }) async {
+      final docNote = FirebaseFirestore.instance.collection('notes').doc();
+      final note = Note(
+          isFavorite: false,
+          timeAdded: DateTime.now().toString(),
+          body: description,
+          title: title,
+          id: docNote.id,
+          email: FirebaseAuth.instance.currentUser!.email);
+
+      final json = note.toJson();
+      await docNote.set(json);
+    }
+
     return Form(
       key: _formKey,
       child: Scaffold(
@@ -52,40 +68,35 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           toolbarHeight: 50,
           automaticallyImplyLeading: false,
           leading: IconButton(
-              onPressed: () {
-                if (controllerBody.text.isEmpty &&
-                    controllerTitle.text.isEmpty) {
-                  Navigator.pop(context);
-                } else {
-                  createNote(title: title);
-                  Navigator.pop(context);
-                }
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Colors.black,
-              )),
-
-          actions: [
-            MyButton(
-              icon: const Icon(
-                Icons.star_border_rounded,
-                color: Colors.black,
-              ),
+            onPressed: () {
+              if (controllerBody.text.isEmpty && controllerTitle.text.isEmpty) {
+                Navigator.pop(context);
+              } else {
+                createNote(title: title);
+                Navigator.pop(context);
+              }
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.black,
             ),
-            MyButton(
-                icon: const Icon(
-                  Icons.save_as_outlined,
-                ),
-                onpressed: () {
-                  createNote(title: title);
-                  Navigator.pop(context);
-                }),
+          ),
+          actions: [
+            //Save Notes
+            Consumer(
+              builder: (context, IsFavoriteProvider, child) => MyButton(
+                  icon: const Icon(
+                    Icons.save_as_outlined,
+                  ),
+                  onpressed: () {
+                    createNote(title: title);
+                    Navigator.pop(context);
+                  }),
+            ),
             const SizedBox(
               width: 21,
             ),
           ],
-          //Font to use, SemiBold, regular,
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -102,7 +113,7 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
                   });
                 },
                 expands: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintStyle: TextStyle(
                     fontSize: 20,
                   ),
@@ -116,18 +127,5 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
         ),
       ),
     );
-  }
-
-  Future createNote({required String title}) async {
-    final docNote = FirebaseFirestore.instance.collection('notes').doc();
-    final note = Note(
-        timeAdded: DateTime.now().toString(),
-        body: description,
-        title: title,
-        id: docNote.id,
-        email: FirebaseAuth.instance.currentUser!.email);
-
-    final json = note.toJson();
-    await docNote.set(json);
   }
 }

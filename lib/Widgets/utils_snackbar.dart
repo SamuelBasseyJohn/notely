@@ -9,7 +9,12 @@ class Utils {
 
     final snackBar = SnackBar(
       duration: const Duration(seconds: 1),
-      content: Text(text),
+      content: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 16,
+        ),
+      ),
       backgroundColor: HexColor("FA5B3D"),
     );
     messengerKey.currentState!

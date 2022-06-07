@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_1.dart';
@@ -59,7 +60,7 @@ class _IntroScreenState extends State<IntroScreen> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NoteHomePage(),
+                                builder: (context) => SavedNotes(),
                               ),
                             );
                           },

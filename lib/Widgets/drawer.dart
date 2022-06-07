@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Screens/favorites_page.dart';
 import 'package:simple_notes_app/Screens/introduction_screen.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
@@ -60,9 +61,9 @@ class _MyDrawerState extends State<MyDrawer> {
                 MaterialPageRoute(builder: (context) => const SavedNotes())),
           ),
           ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.star_border_rounded,
-              size: 30,
+              size: 32,
             ),
             title: MyText(input: "Favorites", fontSize: 20),
             onTap: () => Navigator.push(context,

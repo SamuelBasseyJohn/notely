@@ -2,11 +2,15 @@ import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_notes_app/Providers/favorite_provider.dart';
+import 'package:simple_notes_app/Screens/home_page.dart';
 import 'package:simple_notes_app/Widgets/utils_snackbar.dart';
+import '../Models/Note.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/drawer.dart';
 import '../Widgets/text.dart';
-import 'note_editing_page.dart';
+import 'EditingPages/note_editing_page.dart';
 import 'note_taking_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,9 +23,15 @@ class SavedNotes extends StatefulWidget {
 
 bool iconColor = true;
 
+enum _MenuValues {
+  delete,
+  addToFavorites,
+}
+
 class _SavedNotesState extends State<SavedNotes> {
   @override
   Widget build(BuildContext context) {
+    IsFavoriteProvider provider = Provider.of<IsFavoriteProvider>(context);
     return Scaffold(
       drawer: const MyDrawer(),
       backgroundColor: HexColor("FFFFFF"),
@@ -45,8 +55,8 @@ class _SavedNotesState extends State<SavedNotes> {
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: MyText(
-            input: "Notely",
-            fontSize: 35,
+            input: "All Notes",
+            fontSize: 32,
           ),
         ),
         actions: [
@@ -62,7 +72,12 @@ class _SavedNotesState extends State<SavedNotes> {
               Icons.info_outline,
               color: Colors.black,
             ),
-            onpressed: () {},
+            onpressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AboutNotely(),
+              ),
+            ),
           ),
           const SizedBox(
             width: 21,
@@ -71,107 +86,96 @@ class _SavedNotesState extends State<SavedNotes> {
         //Font to use, SemiBold, regular,
       ),
       //Stream builder
-      body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 20,
-                ),
-                MyText(
-                  input: 'All Notes:',
-                  fontSize: 20,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // ignore: sized_box_for_whitespace
-            Container(
-              height: 900,
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance
-                    .collection('notes')
-                    .where('email',
-                        isEqualTo: FirebaseAuth.instance.currentUser!.email)
-                    .snapshots(),
-                builder: (
-                  context,
-                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-                ) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.docs.isNotEmpty) {
-                      return DragSelectGridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 2,
-                                mainAxisExtent: 250),
-                        itemCount:
-                            snapshot.hasData ? snapshot.data!.docs.length : 0,
-                        itemBuilder: (BuildContext context, index, isSelected) {
-                          final note = snapshot.data!.docs[index].data();
-                          // ignore: unused_local_variable
-                          final edit = snapshot.data!.docs[index].data();
-                          return GestureDetector(
-                            onLongPress: () {},
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NoteEditingPage(
-                                          note: note,
-                                        ))),
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 10,
-                              ),
-                              padding: const EdgeInsets.all(13),
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: HexColor("FFFFFF"),
-                                // border: Border.all(
-                                //   width: 3,
-                                // ),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      spreadRadius: 1,
-                                      blurRadius: 3,
-                                      offset: Offset(0, 2)),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  //Title
-                                  ListTile(
-                                    subtitle: MyText(
-                                        input: note['timeAdded'], fontSize: 8),
-                                    contentPadding: const EdgeInsets.all(0),
-                                    horizontalTitleGap: 0,
-                                    trailing: MyButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.grey,
-                                        size: 25,
-                                      ),
-                                      onpressed: () {
-                                        // FirebaseFirestore.instance
-                                        //     .collection('notes')
-                                        //     .doc(note['id'])
-                                        //     .delete();
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+              .collection('notes')
+              .where('email',
+                  isEqualTo: FirebaseAuth.instance.currentUser!.email)
+              .snapshots(),
+          builder: (
+            context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+          ) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data!.docs.isNotEmpty) {
+                return DragSelectGridView(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 2,
+                      mainAxisExtent: 250),
+                  itemCount: snapshot.hasData ? snapshot.data!.docs.length : 0,
+                  itemBuilder: (BuildContext context, index, isSelected) {
+                    final note = snapshot.data!.docs[index].data();
+                    // ignore: unused_local_variable
+                    final edit = snapshot.data!.docs[index].data();
+                    return GestureDetector(
+                      onLongPress: () {},
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NoteEditingPage(
+                                    note: note,
+                                  ))),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        padding: const EdgeInsets.all(13),
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: HexColor("FFFFFF"),
+                          // border: Border.all(
+                          //   width: 3,
+                          // ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.grey,
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                offset: Offset(0, 2)),
+                          ],
+                        ),
+                        child: Consumer<IsFavoriteProvider>(
+                          builder: (context, IsFavoriteProvider, child) =>
+                              Column(
+                            children: [
+                              //Title
+                              ListTile(
+                                subtitle: MyText(
+                                    input: note['timeAdded'], fontSize: 9),
+                                contentPadding: const EdgeInsets.all(0),
+                                horizontalTitleGap: 0,
+                                trailing: PopupMenuButton<_MenuValues>(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  itemBuilder: (BuildContext context) => [
+                                    PopupMenuItem(
+                                      child:
+                                          MyText(input: 'Delete', fontSize: 15),
+                                      value: _MenuValues.delete,
+                                    ),
+                                    PopupMenuItem(
+                                      child: MyText(
+                                          input: note['isFavorite'] == false
+                                              ? 'Add to favorites'
+                                              : 'Remove from favorites',
+                                          fontSize: 15),
+                                      value: _MenuValues.addToFavorites,
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    switch (value) {
+                                      case _MenuValues.delete:
                                         showDialog(
                                           context: context,
                                           barrierDismissible: true,
@@ -224,60 +228,88 @@ class _SavedNotesState extends State<SavedNotes> {
                                             ],
                                           ),
                                         );
-                                      },
-                                    ),
-                                    title: MyText(
-                                        overflow: TextOverflow.ellipsis,
-                                        input: note['title'] ??= "No title",
-                                        fontSize: 25),
-                                  ),
-                                  const Divider(
-                                    color: Colors.black,
-                                  ),
-                                  Container(
-                                    alignment: const Alignment(-1, -0.6),
-                                    child: MyText(
-                                        maxLines: 5,
-                                        overflow: TextOverflow.ellipsis,
-                                        input: note['description'] ??= "",
-                                        fontSize: 15.02),
-                                  ),
-                                ],
+
+                                        break;
+                                      case _MenuValues.addToFavorites:
+                                        Future addToFavorites() async {
+                                          final docNote = FirebaseFirestore
+                                              .instance
+                                              .collection('notes')
+                                              .doc(note['id']);
+
+                                          final thisNote = Note(
+                                              isFavorite: note['isFavorite'] ==
+                                                      false
+                                                  ? provider.makeFavorite()
+                                                  : provider.removeFavorite(),
+                                              timeAdded:
+                                                  DateTime.now().toString(),
+                                              body: note['description'],
+                                              title: note['title'],
+                                              id: docNote.id,
+                                              email: FirebaseAuth
+                                                  .instance.currentUser!.email);
+
+                                          final json = thisNote.toJson();
+                                          await docNote.update(json);
+                                          print('Added to favorites');
+                                          Utils.showSnackBar(
+                                            note['isFavorite'] == false
+                                                ? 'Added to Favorites!'
+                                                : 'Removed from Favorites!',
+                                          );
+                                        }
+
+                                        addToFavorites();
+                                        break;
+                                    }
+                                  },
+                                  icon: Icon(Icons.more_vert_rounded),
+                                ),
+                                title: MyText(
+                                    overflow: TextOverflow.ellipsis,
+                                    input: note['title'] ??= "No title",
+                                    fontSize: 25),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  }
-                  return Column(
-                    // mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 100,
+                              const Divider(
+                                color: Colors.black,
+                              ),
+                              Container(
+                                alignment: const Alignment(-1, -0.6),
+                                child: MyText(
+                                    maxLines: 5,
+                                    overflow: TextOverflow.ellipsis,
+                                    input: note['description'] ??= "",
+                                    fontSize: 15.02),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      Center(
-                          child: Image.asset(
-                              "Images/Design-inspiration-pana.png")),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      MyText(input: "Create your first note!", fontSize: 20),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
+                    );
+                  },
+                );
+              }
+            }
+            return Column(
+              // mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 100,
+                ),
+                Center(
+                    child: Image.asset("Images/Design-inspiration-pana.png")),
+                const SizedBox(
+                  height: 10,
+                ),
+                MyText(input: "Create your first note!", fontSize: 20),
+              ],
+            );
+          },
         ),
       ),
 
-      //Column(
-      //   // mainAxisSize: MainAxisSize.max,
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [],
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -288,8 +320,8 @@ class _SavedNotesState extends State<SavedNotes> {
           );
         },
         child: const Icon(
-          Icons.add,
-          size: 38,
+          Icons.post_add_rounded,
+          size: 30,
           color: Colors.white,
         ),
         elevation: 15,

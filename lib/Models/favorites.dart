@@ -1,16 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:simple_notes_app/Models/note.dart';
 
-class FavoriteNote with ChangeNotifier {
-  String id;
-  String title;
-  String body;
-  String? email = FirebaseAuth.instance.currentUser!.email;
+class Favorite {
+  final List<Note> _favoritesList = [];
 
-  FavoriteNote({
-    this.id = " ",
-    required this.body,
-    required this.title,
-    required this.email,
-  });
+  List<Note> get favoritesList => _favoritesList;
+
+//  Future addToFavorites() async {
+//     final docNote = FirebaseFirestore.instance
+//         .collection('notes')
+//         .doc(FirebaseAuth.instance.currentUser!.email);
+//     final favDocNote = docNote.collection('favorite notes').doc();
+//     final favNote = Note(
+//         isFavorite: false,
+//         timeAdded: DateTime.now().toString(),
+//         body: description,
+//         title: title,
+//         id: docNote.id,
+//         email: FirebaseAuth.instance.currentUser!.email);
+
+//     final json = favNote.toJson();
+//     await favDocNote.set(json);
+//     print('Added to favorites');
+//     Utils.showSnackBar('Added to Favorites!');
+//   }
 }

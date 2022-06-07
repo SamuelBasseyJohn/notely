@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_notes_app/Screens/Authentication/sign_in.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:simple_notes_app/Screens/saved_notes.dart';
 
 import '../home_page.dart';
 
@@ -20,7 +21,7 @@ class _AfterLoginState extends State<AfterLogin> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return NoteHomePage();
+            return SavedNotes();
           } else {
             return Login();
           }
