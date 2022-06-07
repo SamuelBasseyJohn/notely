@@ -87,6 +87,7 @@ class _MyDrawerState extends State<MyDrawer> {
             title: MyText(input: "Sign-out", fontSize: 20),
             onTap: () {
               FirebaseAuth.instance.signOut();
+              Navigator.pop(context);
             },
           ),
           Divider(

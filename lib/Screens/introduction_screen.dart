@@ -57,12 +57,12 @@ class _IntroScreenState extends State<IntroScreen> {
                   lastPage
                       ? ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SavedNotes(),
-                              ),
-                            );
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => SavedNotes(),
+                            //   ),
+                            // );
                           },
                           child: MyText(
                             input: "Continue Offline",
