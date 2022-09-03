@@ -308,7 +308,7 @@ class _SignInState extends State<SignUp> {
   void signUp() async {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
@@ -318,11 +318,27 @@ class _SignInState extends State<SignUp> {
         email: _email.text.trim(),
         password: _password.text.trim(),
       );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => SavedNotes()),
+          (route) => false);
     } on FirebaseAuthException catch (e) {
       print(e);
-
-      Utils.showSnackBar(e.message);
+      showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('Ok'))
+                ],
+                content: Container(
+                  child: Text('Check your internet connection and try again!'),
+                ),
+              ));
+      // Utils.showSnackBar(e.message);
     }
-    navigatorkey.currentState!.popUntil((route) => route.isFirst);
+    // navigatorkey.currentState!.popUntil((route) => route.isFirst);
   }
 }

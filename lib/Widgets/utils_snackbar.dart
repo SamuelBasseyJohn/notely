@@ -15,7 +15,7 @@ class Utils {
           fontSize: 16,
         ),
       ),
-      backgroundColor: HexColor("FA5B3D"),
+      backgroundColor: HexColor("37474F"),
     );
     messengerKey.currentState!
       ..removeCurrentSnackBar()

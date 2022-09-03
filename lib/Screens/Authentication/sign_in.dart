@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors
 import 'package:simple_notes_app/Screens/Authentication/create%20account.dart';
+import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -234,8 +235,10 @@ class _LoginState extends State<Login> {
                   TextButton(
                     child: Text("Sign Up",
                         style: TextStyle(color: HexColor("FA5B3D"))),
-                    onPressed: () => Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => SignUp())),
+                    onPressed: () => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUp()),
+                        (route) => false),
                   ),
                 ],
               ),
@@ -257,12 +260,31 @@ class _LoginState extends State<Login> {
         email: _email.text.trim(),
         password: _password.text.trim(),
       );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => SavedNotes()),
+          (route) => false);
     } on FirebaseAuthException catch (e) {
       // ignore: avoid_print
       print(e);
-      Utils.showSnackBar(e.message);
+      showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (context) => AlertDialog(
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('Ok'))
+                ],
+                content: Container(
+                  child: Text('Check your internet connection and try again!'),
+                ),
+              ));
+      // Utils.showSnackBar(e.message);
+
     }
-    navigatorkey.currentState!.popUntil((route) => route.isFirst);
+
+    // navigatorkey.currentState!.popUntil((route) => route.isFirst);
     // final input = await Navigator.push(
     //     context,
     //     MaterialPageRoute(

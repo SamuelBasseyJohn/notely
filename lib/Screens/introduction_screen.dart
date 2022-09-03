@@ -50,28 +50,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   lastPage
-                      ? ElevatedButton(
-                          onPressed: () {
-                            // Navigator.pushReplacement(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => SavedNotes(),
-                            //   ),
-                            // );
-                          },
-                          child: MyText(
-                            input: "Continue Offline",
-                            fontSize: 20,
-                            color: "252525",
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(100, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            primary: HexColor("d6d6d6"),
-                          ),
-                        )
+                      ? MyText(input: " ", fontSize: 30)
                       : ElevatedButton(
                           onPressed: () {
                             _pageController.jumpToPage(2);

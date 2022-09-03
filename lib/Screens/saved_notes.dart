@@ -34,10 +34,10 @@ class _SavedNotesState extends State<SavedNotes> {
     IsFavoriteProvider provider = Provider.of<IsFavoriteProvider>(context);
     return Scaffold(
       drawer: const MyDrawer(),
-      backgroundColor: HexColor("FFFFFF"),
+
       appBar: AppBar(
         toolbarHeight: 60,
-        backgroundColor: HexColor("FFFFFF"),
+        backgroundColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Builder(
@@ -146,8 +146,7 @@ class _SavedNotesState extends State<SavedNotes> {
                           ],
                         ),
                         child: Consumer<IsFavoriteProvider>(
-                          builder: (context, IsFavoriteProvider, child) =>
-                              Column(
+                          builder: (context, _, child) => Column(
                             children: [
                               //Title
                               ListTile(

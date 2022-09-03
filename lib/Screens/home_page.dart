@@ -45,7 +45,7 @@ class _AboutNotelyState extends State<AboutNotely> {
           const SizedBox(
             height: 10,
           ),
-          MyText(input: "Version: 1.0.0", fontSize: 20),
+          MyText(input: "Version: 1.0.1", fontSize: 20),
           const SizedBox(
             height: 50,
           )

@@ -42,7 +42,6 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
     return Form(
       key: _formKey,
       child: Scaffold(
-        backgroundColor: HexColor("FFFFFF"),
         appBar: AppBar(
           title: TextFormField(
             // validator: ,
@@ -81,6 +80,13 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
             ),
           ),
           actions: [
+            // Change font size
+            IconButton(
+                onPressed: () {}, icon: Icon(Icons.font_download_outlined)),
+
+            SizedBox(
+              width: 10,
+            ),
             //Save Notes
             Consumer(
               // ignore: non_constant_identifier_names
@@ -98,31 +104,33 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              TextFormField(
-                style: TextStyle(fontSize: 20, color: HexColor("000000")),
-                maxLines: null,
-                // validator: ,
-                controller: controllerBody,
-                onChanged: (value) {
-                  setState(() {
-                    description = value;
-                  });
-                },
-                expands: false,
-                decoration: const InputDecoration(
-                  hintStyle: TextStyle(
-                    fontSize: 20,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  style: TextStyle(fontSize: 20, color: HexColor("000000")),
+                  maxLines: null,
+                  // validator: ,
+                  controller: controllerBody,
+                  onChanged: (value) {
+                    setState(() {
+                      description = value;
+                    });
+                  },
+                  expands: false,
+                  decoration: const InputDecoration(
+                    hintStyle: TextStyle(
+                      fontSize: 20,
+                    ),
+                    border: InputBorder.none,
+                    hintText: "Type something...",
                   ),
-                  border: InputBorder.none,
-                  hintText: "Type something...",
+                  onSaved: (value) {},
                 ),
-                onSaved: (value) {},
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -53,6 +53,7 @@ class _FavoritesState extends State<Favorites> {
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection('notes')
+            .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
             .where('isFavorite', isEqualTo: true)
             .snapshots(),
         builder: (

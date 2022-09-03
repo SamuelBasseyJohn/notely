@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_notes_app/Models/notes_operation.dart';
 import 'package:simple_notes_app/Providers/notes_provider.dart';
+import 'package:simple_notes_app/Screens/favorites_page.dart';
 import 'package:simple_notes_app/Screens/home_page.dart';
 import 'package:simple_notes_app/Screens/introduction_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,22 +24,31 @@ void main() async {
 
 final navigatorkey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => IsFavoriteProvider(),
       builder: (context, child) => MaterialApp(
+        initialRoute: '/',
+        routes: {
+          '/login': (context) => IntroScreen(),
+        },
         scaffoldMessengerKey: Utils.messengerKey,
         navigatorKey: navigatorkey,
         debugShowCheckedModeBanner: false,
         title: 'Notely',
+        themeMode: ThemeMode.system,
         theme: ThemeData(
-          primarySwatch: Colors.grey,
-          brightness: Brightness.light,
+          primarySwatch: Colors.blue,
           textTheme:
               GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
         ),

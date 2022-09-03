@@ -119,43 +119,45 @@ class _NoteEditingPageState extends State<NoteEditingPage> {
           ],
           //Font to use, SemiBold, regular,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              TextFormField(
-                style: TextStyle(fontSize: 20, color: HexColor("000000")),
-                maxLines: null,
-                // validator: ,
-                // controller: controllerBody,
-                initialValue: description,
-                onChanged: (value) {
-                  setState(() {
-                    description = value;
-                  });
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "can't be empty";
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) {
-                  setState(() {
-                    description = value!;
-                  });
-                },
-                expands: false,
-                decoration: const InputDecoration(
-                  hintStyle: TextStyle(
-                    fontSize: 20,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  style: TextStyle(fontSize: 20, color: HexColor("000000")),
+                  maxLines: null,
+                  // validator: ,
+                  // controller: controllerBody,
+                  initialValue: description,
+                  onChanged: (value) {
+                    setState(() {
+                      description = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "can't be empty";
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    setState(() {
+                      description = value!;
+                    });
+                  },
+                  expands: false,
+                  decoration: const InputDecoration(
+                    hintStyle: TextStyle(
+                      fontSize: 20,
+                    ),
+                    border: InputBorder.none,
+                    hintText: "Type something...",
                   ),
-                  border: InputBorder.none,
-                  hintText: "Type something...",
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
