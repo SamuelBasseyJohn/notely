@@ -1,11 +1,15 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors
-import 'package:simple_notes_app/Screens/Authentication/create%20account.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_notes_app/Screens/Authentication/create_account.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../Providers/google_sign_in.dart';
 import '../../Widgets/utils_snackbar.dart';
 
 class Login extends StatefulWidget {
@@ -216,10 +220,10 @@ class _LoginState extends State<Login> {
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(340, 50),
+                            backgroundColor: value,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7),
                             ),
-                            primary: value,
                           ),
                           child: const Text("Sign in"),
                         ),
@@ -231,10 +235,14 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                  const Text(
+                    "Don't have an account?",
+                    style: TextStyle(fontSize: 18),
+                  ),
                   TextButton(
                     child: Text("Sign Up",
-                        style: TextStyle(color: HexColor("FA5B3D"))),
+                        style:
+                            TextStyle(color: HexColor("FA5B3D"), fontSize: 18)),
                     onPressed: () => Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => SignUp()),
@@ -242,12 +250,45 @@ class _LoginState extends State<Login> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton.icon(
+                  onPressed: () async {
+                    final provider = Provider.of<GoogleSignInProvider>(context,
+                        listen: false);
+                    await provider.googleLogIn();
+                    if (provider.user != null) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => SavedNotes()),
+                          (route) => false);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: HexColor("37474F"),
+                  ),
+                  icon: FaIcon(
+                    FontAwesomeIcons.google,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    "Sign in with Google",
+                    style: TextStyle(color: Colors.white),
+                  ))
             ],
           ),
         ),
       ),
     );
   }
+
+  // Future signInWithGoogle() async {
+  //   final provider = await Provider.of<GoogleSignInProvider>(context,
+  //                       listen: false);
+  //                   provider.googleLogIn();
+  // }
 
   Future Signin() async {
     showDialog(
@@ -281,7 +322,6 @@ class _LoginState extends State<Login> {
                 ),
               ));
       // Utils.showSnackBar(e.message);
-
     }
 
     // navigatorkey.currentState!.popUntil((route) => route.isFirst);

@@ -32,6 +32,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 lastPage = (index == 2);
               });
             },
+
             children: const [
               IntroPage1(),
               IntroPage2(),
@@ -40,7 +41,10 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
           Container(
             alignment: const Alignment(0, 0.75),
-            child: SmoothPageIndicator(controller: _pageController, count: 3),
+            child: SmoothPageIndicator(
+              controller: _pageController,
+              count: 3,
+            ),
           ),
           Container(
             alignment: const Alignment(0, 0.92),
@@ -65,7 +69,7 @@ class _IntroScreenState extends State<IntroScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            primary: HexColor("D6D6D6"),
+                            backgroundColor: HexColor("D6D6D6"),
                           ),
                         ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,7 @@ class _SavedNotesState extends State<SavedNotes> {
             ),
             onpressed: () => Navigator.push(
               context,
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (context) => const AboutNotely(),
               ),
             ),
@@ -156,7 +157,8 @@ class _SavedNotesState extends State<SavedNotes> {
                                 horizontalTitleGap: 0,
                                 trailing: PopupMenuButton<_MenuValues>(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
                                   itemBuilder: (BuildContext context) => [
                                     PopupMenuItem(
                                       child:

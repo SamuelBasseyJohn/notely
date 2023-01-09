@@ -1,15 +1,13 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import 'package:simple_notes_app/Screens/home_page.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_notes_app/Providers/google_sign_in.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
 
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:simple_notes_app/main.dart';
-
-import '../../Widgets/utils_snackbar.dart';
 import 'after_login.dart';
 
 class SignUp extends StatefulWidget {
@@ -100,52 +98,11 @@ class _SignInState extends State<SignUp> {
                         const SizedBox(
                           height: 20,
                         ),
-                        // Row(
-                        //   children: [
-                        //     Padding(
-                        //         padding: EdgeInsets.symmetric(horizontal: 20.0),
-                        //         child: MyText(input: "Name:", fontSize: 20)),
-                        //   ],
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(
-                        //     20.0,
-                        //     5.0,
-                        //     20.0,
-                        //     15.0,
-                        //   ),
-                        //   child: TextFormField(
-                        //     onChanged: (value) {
-                        //       colorFn(
-                        //           nametc: _name.text,
-                        //           emailtc: _email.text,
-                        //           passwordtc: _password.text);
-                        //     },
-                        //     validator: (value) {
-                        //       String pattern = r'[A-Z]';
-                        //       RegExp regex = RegExp(pattern);
-                        //       if (value == null || value.isEmpty) {
-                        //         return "Enter your name";
-                        //       } else if (!regex.hasMatch(value) &&
-                        //           value.contains(RegExp(r'[0-9]'))) {
-                        //         return "Is that even a name?";
-                        //       } else {
-                        //         return null;
-                        //       }
-                        //     },
-                        //     keyboardType: TextInputType.emailAddress,
-                        //     controller: _name,
-                        //     decoration: const InputDecoration(
-                        //       prefixIcon: Icon(Icons.mail),
-                        //       hintText: "Name",
-                        //       border: OutlineInputBorder(),
-                        //     ),
-                        //   ),
-                        // ),
                         Row(
                           children: [
                             Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
                                 child: MyText(
                                     input: "Email address:", fontSize: 20)),
                           ],
@@ -264,7 +221,7 @@ class _SignInState extends State<SignUp> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7),
                             ),
-                            primary: value,
+                            backgroundColor: value,
                           ),
                           child: const Text("Create your account"),
                         ),
@@ -272,6 +229,9 @@ class _SignInState extends State<SignUp> {
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -290,6 +250,34 @@ class _SignInState extends State<SignUp> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final provider =
+                      Provider.of<GoogleSignInProvider>(context, listen: false);
+                  await provider.googleLogIn();
+                  if (provider.user != null) {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => const SavedNotes()),
+                        (route) => false);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: HexColor("37474F"),
+                ),
+                icon: const FaIcon(
+                  FontAwesomeIcons.google,
+                  color: Colors.white,
+                ),
+                label: const Text(
+                  "Sign up with Google",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -320,10 +308,9 @@ class _SignInState extends State<SignUp> {
       );
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => SavedNotes()),
+          CupertinoPageRoute(builder: (context) => const SavedNotes()),
           (route) => false);
     } on FirebaseAuthException catch (e) {
-      print(e);
       showDialog(
           barrierDismissible: true,
           context: context,
@@ -331,11 +318,10 @@ class _SignInState extends State<SignUp> {
                 actions: [
                   ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text('Ok'))
+                      child: const Text('Ok'))
                 ],
-                content: Container(
-                  child: Text('Check your internet connection and try again!'),
-                ),
+                content:
+                    const Text('Check your internet connection and try again!'),
               ));
       // Utils.showSnackBar(e.message);
     }

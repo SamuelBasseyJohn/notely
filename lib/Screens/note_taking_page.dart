@@ -23,7 +23,7 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    Future createNote({
+    Future<void> createNote({
       required String title,
     }) async {
       final docNote = FirebaseFirestore.instance.collection('notes').doc();

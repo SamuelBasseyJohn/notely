@@ -12,10 +12,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:simple_notes_app/Firebase/firebase_options.dart';
 
 import 'Providers/favorite_provider.dart';
+import 'Providers/google_sign_in.dart';
 import 'Screens/saved_notes.dart';
 import 'Widgets/utils_snackbar.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -35,12 +36,19 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => IsFavoriteProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => IsFavoriteProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GoogleSignInProvider(),
+        )
+      ],
       builder: (context, child) => MaterialApp(
         initialRoute: '/',
         routes: {
-          '/login': (context) => IntroScreen(),
+          '/login': (context) => const IntroScreen(),
         },
         scaffoldMessengerKey: Utils.messengerKey,
         navigatorKey: navigatorkey,
@@ -48,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Notely',
         themeMode: ThemeMode.system,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.orange,
           textTheme:
               GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
         ),

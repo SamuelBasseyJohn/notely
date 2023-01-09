@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:simple_notes_app/Providers/google_sign_in.dart';
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_3.dart';
 import 'package:simple_notes_app/Screens/favorites_page.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
@@ -18,41 +22,57 @@ class MyDrawer extends StatefulWidget {
 
 class _MyDrawerState extends State<MyDrawer> {
   final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
+    final name = user.displayName ?? "No Name";
+    final image = user.photoURL;
+    final googleProvider = Provider.of<GoogleSignInProvider>(context);
     return Drawer(
       shape: const RoundedRectangleBorder(
-          // borderRadius: BorderRadius.only(
-          //     topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
-          ),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+      ),
       backgroundColor: Colors.white,
       child: ListView(
         children: [
           DrawerHeader(
-              margin: const EdgeInsets.fromLTRB(5, 5, 0, 10),
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              duration: const Duration(milliseconds: 250),
-              child: ListView(children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ListTile(
-                      title: MyText(input: 'Notely', fontSize: 45),
-                      dense: false,
-                    ),
-                    ListTile(
-                      title: Text(
-                        user.email!,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      dense: false,
-                    )
-                  ],
+            padding: const EdgeInsets.fromLTRB(0, 20, 16, 8),
+            duration: const Duration(milliseconds: 250),
+            child: Column(
+              children: [
+                const ListTile(
+                  title: Text(
+                    "Notely",
+                    style: TextStyle(fontSize: 35),
+                  ),
                 ),
-              ])),
+                const SizedBox(
+                  height: 5,
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  minLeadingWidth: 20,
+                  leading: CircleAvatar(
+                    radius: 40,
+                    child: image == null
+                        ? const Icon(Icons.person)
+                        : ClipOval(
+                            child: Image(
+                              image: NetworkImage(user.photoURL!),
+                            ),
+                          ),
+                  ),
+                  title: Text(name),
+                  subtitle: Text(
+                    user.email!,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  dense: false,
+                ),
+              ],
+            ),
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(
@@ -61,7 +81,7 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             title: MyText(input: "All notes", fontSize: 20),
             onTap: () => Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const SavedNotes())),
+                CupertinoPageRoute(builder: (context) => const SavedNotes())),
           ),
           ListTile(
             leading: const Icon(
@@ -70,7 +90,7 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             title: MyText(input: "Favorites", fontSize: 20),
             onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Favorites())),
+                CupertinoPageRoute(builder: (context) => const Favorites())),
           ),
           ListTile(
             leading: const Icon(
@@ -79,11 +99,12 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             title: MyText(input: "Sign-out", fontSize: 20),
             onTap: () async {
+              googleProvider.logout();
               await FirebaseAuth.instance.signOut();
               // Navigator.popUntil(context, ModalRoute.withName('/login'));
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => IntroScreen()),
+                  CupertinoPageRoute(builder: (context) => IntroScreen()),
                   (route) => false);
 
               Utils.showSnackBar('Signed out!');
