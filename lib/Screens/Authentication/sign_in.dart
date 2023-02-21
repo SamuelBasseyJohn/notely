@@ -258,6 +258,7 @@ class _LoginState extends State<Login> {
                     final provider = Provider.of<GoogleSignInProvider>(context,
                         listen: false);
                     await provider.googleLogIn();
+                    // ignore: unnecessary_null_comparison
                     if (provider.user != null) {
                       Navigator.pushAndRemoveUntil(
                           context,

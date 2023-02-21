@@ -99,6 +99,24 @@ class _SignInState extends State<SignUp> {
                           height: 20,
                         ),
                         Row(
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                "Username: ",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 15.0),
+                          child: TextFormField(),
+                        ),
+                        Row(
                           children: [
                             Padding(
                                 padding: const EdgeInsets.symmetric(
