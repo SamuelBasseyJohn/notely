@@ -13,17 +13,20 @@ class IntroPage2 extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            alignment: Alignment(-0.7, -0.7),
+            alignment: const Alignment(-0.7, -0.7),
             child: MyText(input: "Aesthetic and Intuitive", fontSize: 28),
           ),
           Container(
-            alignment: Alignment(0, -0.13),
-            child: Image(image: AssetImage("Images/Diary-pana.png")),
+            alignment: const Alignment(0, -0.13),
+            child: const SizedBox(
+                height: 400,
+                width: 400,
+                child: Image(image: AssetImage("Images/Diary-pana.png"))),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Container(
-              alignment: Alignment(0, 0.55),
+              alignment: const Alignment(0, 0.61),
               child: MyText(
                 input: "Express your creativity with a clean and simple UI...",
                 fontSize: 25,

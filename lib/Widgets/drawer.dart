@@ -1,17 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_notes_app/Providers/google_sign_in.dart';
-import 'package:simple_notes_app/Screens/IntroPages/intro_page_3.dart';
 import 'package:simple_notes_app/Screens/favorites_page.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 
 import '../Screens/introduction_screen.dart';
-import 'utils_snackbar.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key}) : super(key: key);
@@ -99,15 +95,18 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             title: MyText(input: "Sign-out", fontSize: 20),
             onTap: () async {
+              await Future.delayed(const Duration(milliseconds: 700));
               googleProvider.logout();
               await FirebaseAuth.instance.signOut();
-              // Navigator.popUntil(context, ModalRoute.withName('/login'));
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  CupertinoPageRoute(builder: (context) => IntroScreen()),
-                  (route) => false);
+              if (context.mounted) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => const IntroScreen()),
+                    (route) => false);
+              }
 
-              Utils.showSnackBar('Signed out!');
+              // Utils.showSnackBar('Signed out!');
             },
           ),
           Divider(

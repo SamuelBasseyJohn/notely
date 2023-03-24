@@ -33,8 +33,12 @@ class _SavedNotesState extends State<SavedNotes> {
   @override
   Widget build(BuildContext context) {
     IsFavoriteProvider provider = Provider.of<IsFavoriteProvider>(context);
+    final username = FirebaseAuth.instance.currentUser!.displayName!.split(" ");
+    final firstName = username[0];
+
     return Scaffold(
       drawer: const MyDrawer(),
+      backgroundColor: Colors.white,
 
       appBar: AppBar(
         toolbarHeight: 60,
@@ -161,17 +165,17 @@ class _SavedNotesState extends State<SavedNotes> {
                                   ),
                                   itemBuilder: (BuildContext context) => [
                                     PopupMenuItem(
+                                      value: _MenuValues.delete,
                                       child:
                                           MyText(input: 'Delete', fontSize: 15),
-                                      value: _MenuValues.delete,
                                     ),
                                     PopupMenuItem(
+                                      value: _MenuValues.addToFavorites,
                                       child: MyText(
                                           input: note['isFavorite'] == false
                                               ? 'Add to favorites'
                                               : 'Remove from favorites',
                                           fontSize: 15),
-                                      value: _MenuValues.addToFavorites,
                                     ),
                                   ],
                                   onSelected: (value) {
@@ -253,7 +257,7 @@ class _SavedNotesState extends State<SavedNotes> {
 
                                           final json = thisNote.toJson();
                                           await docNote.update(json);
-                                          print('Added to favorites');
+
                                           Utils.showSnackBar(
                                             note['isFavorite'] == false
                                                 ? 'Added to Favorites!'
@@ -265,7 +269,7 @@ class _SavedNotesState extends State<SavedNotes> {
                                         break;
                                     }
                                   },
-                                  icon: Icon(Icons.more_vert_rounded),
+                                  icon: const Icon(Icons.more_vert_rounded),
                                 ),
                                 title: MyText(
                                     overflow: TextOverflow.ellipsis,
@@ -296,11 +300,18 @@ class _SavedNotesState extends State<SavedNotes> {
               // mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 100,
+                Expanded(
+                  child: SizedBox(
+                    height: 30,
+                    child: Center(
+                      child: MyText(input: "Hello $firstName", fontSize: 23),
+                    ),
+                  ),
                 ),
-                Center(
-                    child: Image.asset("Images/Design-inspiration-pana.png")),
+                Expanded(
+                  child: Center(
+                      child: Image.asset("Images/Design-inspiration-pana.png")),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -320,13 +331,13 @@ class _SavedNotesState extends State<SavedNotes> {
             ),
           );
         },
+        elevation: 15,
+        backgroundColor: HexColor("37474F"),
         child: const Icon(
           Icons.post_add_rounded,
           size: 30,
           color: Colors.white,
         ),
-        elevation: 15,
-        backgroundColor: HexColor("37474F"),
       ),
     );
   }

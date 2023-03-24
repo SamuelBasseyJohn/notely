@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_1.dart';
 import 'package:simple_notes_app/Screens/IntroPages/intro_page_2.dart';
@@ -40,14 +39,18 @@ class _IntroScreenState extends State<IntroScreen> {
             ],
           ),
           Container(
-            alignment: const Alignment(0, 0.75),
-            child: SmoothPageIndicator(
-              controller: _pageController,
-              count: 3,
+            alignment: const Alignment(0, 0.77),
+            child: SizedBox(
+              height: 10,
+              child: SmoothPageIndicator(
+                effect: const SwapEffect(),
+                controller: _pageController,
+                count: 3,
+              ),
             ),
           ),
           Container(
-            alignment: const Alignment(0, 0.92),
+            alignment: const Alignment(0, 0.95),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
@@ -55,21 +58,23 @@ class _IntroScreenState extends State<IntroScreen> {
                 children: [
                   lastPage
                       ? MyText(input: " ", fontSize: 30)
-                      : ElevatedButton(
+                      : TextButton(
                           onPressed: () {
                             _pageController.jumpToPage(2);
                           },
-                          child: MyText(
-                            input: "Skip",
-                            fontSize: 20,
-                            color: "252525",
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(100, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            backgroundColor: HexColor("D6D6D6"),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MyText(
+                                input: "Skip",
+                                fontSize: 20,
+                                color: "252525",
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 20,
+                              )
+                            ],
                           ),
                         ),
                 ],

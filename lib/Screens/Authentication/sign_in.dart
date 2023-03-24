@@ -4,13 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_notes_app/Screens/Authentication/create_account.dart';
 import 'package:simple_notes_app/Screens/saved_notes.dart';
-import 'package:simple_notes_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_notes_app/Widgets/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../Providers/google_sign_in.dart';
-import '../../Widgets/utils_snackbar.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -212,11 +210,11 @@ class _LoginState extends State<Login> {
 
                         ElevatedButton(
                           onPressed: () {
-                            // if (_formKey.currentState!.validate()) {
-                            //   Signin();
-                            // }
+                            if (_formKey.currentState!.validate()) {
+                              Signin();
+                            }
 
-                            Signin();
+                            // Signin();
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(340, 50),
@@ -259,7 +257,7 @@ class _LoginState extends State<Login> {
                         listen: false);
                     await provider.googleLogIn();
                     // ignore: unnecessary_null_comparison
-                    if (provider.user != null) {
+                    if (provider.user != null && context.mounted) {
                       Navigator.pushAndRemoveUntil(
                           context,
                           CupertinoPageRoute(
@@ -302,14 +300,19 @@ class _LoginState extends State<Login> {
         email: _email.text.trim(),
         password: _password.text.trim(),
       );
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => SavedNotes()),
-          (route) => false);
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => SavedNotes()),
+            (route) => false);
+      }
     } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
       // ignore: avoid_print
-      print(e);
+      final error = e.toString().split(']');
+
       showDialog(
+          barrierColor: Colors.black87,
           barrierDismissible: true,
           context: context,
           builder: (context) => AlertDialog(
@@ -318,9 +321,7 @@ class _LoginState extends State<Login> {
                       onPressed: () => Navigator.pop(context),
                       child: Text('Ok'))
                 ],
-                content: Container(
-                  child: Text('Check your internet connection and try again!'),
-                ),
+                content: Text(error[1]),
               ));
       // Utils.showSnackBar(e.message);
     }

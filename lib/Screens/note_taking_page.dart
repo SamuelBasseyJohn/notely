@@ -34,7 +34,6 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           title: title,
           id: docNote.id,
           email: FirebaseAuth.instance.currentUser!.email);
-
       final json = note.toJson();
       await docNote.set(json);
     }
@@ -82,9 +81,10 @@ class _NoteTakingPageState extends State<NoteTakingPage> {
           actions: [
             // Change font size
             IconButton(
-                onPressed: () {}, icon: Icon(Icons.font_download_outlined)),
+                onPressed: () {},
+                icon: const Icon(Icons.font_download_outlined)),
 
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             //Save Notes

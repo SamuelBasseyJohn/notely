@@ -22,7 +22,7 @@ class _SignInState extends State<SignUp> {
   final TextEditingController _password = TextEditingController();
 
   // ignore: unused_field
-  final TextEditingController _name = TextEditingController();
+  final TextEditingController _username = TextEditingController();
   bool? checkboxValue = false;
   bool _isVisible = false;
 
@@ -30,19 +30,15 @@ class _SignInState extends State<SignUp> {
   bool isEmpty = true;
   Color colorFn(
       {String? emailtc,
-      // String? nametc,
+      String? nametc,
       String? passwordtc,
       Color changedColor = const Color.fromARGB(255, 249, 90, 46)}) {
-    if (emailtc!.isNotEmpty && passwordtc!.isNotEmpty
-        //  && nametc!.isNotEmpty
-        ) {
+    if (emailtc!.isNotEmpty && passwordtc!.isNotEmpty && nametc!.isNotEmpty) {
       setState(() {
         value = changedColor;
       });
       return value!;
-    } else if (emailtc.isEmpty || passwordtc!.isEmpty
-        // || nametc!.isEmpty
-        ) {
+    } else if (nametc!.isEmpty || emailtc.isEmpty || passwordtc!.isEmpty) {
       setState(() {
         value = Colors.grey;
       });
@@ -114,7 +110,32 @@ class _SignInState extends State<SignUp> {
                         Padding(
                           padding:
                               const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 15.0),
-                          child: TextFormField(),
+                          child: TextFormField(
+                            onChanged: (value) {
+                              colorFn(
+                                  nametc: _username.text,
+                                  emailtc: _email.text,
+                                  passwordtc: _password.text);
+                            },
+                            validator: (value) {
+                              String pattern = r'\w+';
+                              RegExp regex = RegExp(pattern);
+                              if (value == null || value.isEmpty) {
+                                return "Enter your Username";
+                              } else if (!regex.hasMatch(value)) {
+                                return "Enter a valid Username";
+                              } else {
+                                return null;
+                              }
+                            },
+                            keyboardType: TextInputType.emailAddress,
+                            controller: _username,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.person),
+                              hintText: "Name",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
                         ),
                         Row(
                           children: [
@@ -135,7 +156,7 @@ class _SignInState extends State<SignUp> {
                           child: TextFormField(
                             onChanged: (value) {
                               colorFn(
-                                  // nametc: _name.text,
+                                  nametc: _username.text,
                                   emailtc: _email.text,
                                   passwordtc: _password.text);
                             },
@@ -162,7 +183,8 @@ class _SignInState extends State<SignUp> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: MyText(
                                 input: "Password:",
                                 fontSize: 20,
@@ -180,7 +202,7 @@ class _SignInState extends State<SignUp> {
                           child: TextFormField(
                             onChanged: (value) {
                               colorFn(
-                                  // nametc: _name.text,
+                                  nametc: _username.text,
                                   emailtc: _email.text,
                                   passwordtc: _password.text);
                             },
@@ -224,10 +246,6 @@ class _SignInState extends State<SignUp> {
                         SizedBox(
                           height: 10,
                         ),
-
-                        //Tenary operator for Checking if the required textFormFields are
-                        //  filled and valid to enable color
-
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -264,7 +282,8 @@ class _SignInState extends State<SignUp> {
                             TextStyle(fontSize: 18, color: HexColor("FA5B3D"))),
                     onPressed: () => Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => AfterLogin()),
+                      MaterialPageRoute(
+                          builder: (context) => const AfterLogin()),
                     ),
                   ),
                 ],
@@ -277,13 +296,11 @@ class _SignInState extends State<SignUp> {
                   final provider =
                       Provider.of<GoogleSignInProvider>(context, listen: false);
                   await provider.googleLogIn();
-                  if (provider.user != null) {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => const SavedNotes()),
-                        (route) => false);
-                  }
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => const SavedNotes()),
+                      (route) => false);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: HexColor("37474F"),
@@ -320,15 +337,21 @@ class _SignInState extends State<SignUp> {
       ),
     );
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: _email.text.trim(),
         password: _password.text.trim(),
-      );
+      )
+          .then((value) {
+        final user = value.user!;
+        user.updateDisplayName(_username.text.trim());
+      });
       Navigator.pushAndRemoveUntil(
-          context,
-          CupertinoPageRoute(builder: (context) => const SavedNotes()),
-          (route) => false);
-    } on FirebaseAuthException catch (e) {
+        context,
+        CupertinoPageRoute(builder: (context) => const SavedNotes()),
+        (route) => false,
+      );
+    } on FirebaseAuthException {
       showDialog(
           barrierDismissible: true,
           context: context,
