@@ -295,12 +295,14 @@ class _SignInState extends State<SignUp> {
                 onPressed: () async {
                   final provider =
                       Provider.of<GoogleSignInProvider>(context, listen: false);
-                  await provider.googleLogIn();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => const SavedNotes()),
-                      (route) => false);
+                  await provider.googleLogIn(context);
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => const SavedNotes()),
+                        (route) => false);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: HexColor("37474F"),
@@ -321,13 +323,6 @@ class _SignInState extends State<SignUp> {
     );
   }
 
-  void name() async {
-    final input = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => const SavedNotes()));
-  }
-
   void signUp() async {
     showDialog(
       context: context,
@@ -346,20 +341,24 @@ class _SignInState extends State<SignUp> {
         final user = value.user!;
         user.updateDisplayName(_username.text.trim());
       });
-      Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(builder: (context) => const SavedNotes()),
-        (route) => false,
-      );
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (context) => const SavedNotes()),
+          (route) => false,
+        );
+      }
     } on FirebaseAuthException {
       showDialog(
           barrierDismissible: true,
           context: context,
           builder: (context) => AlertDialog(
                 actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Ok'))
+                  Center(
+                    child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Ok')),
+                  )
                 ],
                 content:
                     const Text('Check your internet connection and try again!'),

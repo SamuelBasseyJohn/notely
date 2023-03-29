@@ -76,7 +76,7 @@ class _IntroPage3State extends State<IntroPage3> {
                     ),
                   ),
                   child: MyText(
-                    input: "Log in",
+                    input: "Sign in",
                     fontSize: 20,
                     color: "FA5B3D",
                   ),

@@ -9,9 +9,28 @@ class GoogleSignInProvider extends ChangeNotifier {
 
   GoogleSignInAccount get user => _user!;
 
-  Future googleLogIn() async {
+  Future googleLogIn(BuildContext context) async {
     try {
-      final googleUser = await googleSignIn.signIn();
+      final googleUser = await googleSignIn.signIn().catchError((error) {
+        showDialog(
+            barrierDismissible: true,
+            context: context,
+            builder: (context) => AlertDialog(
+                  actions: [
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(100, 35)),
+                        child: const Text('Ok'),
+                      ),
+                    )
+                  ],
+                  content: const Text(
+                      'An error occured, check your connection settings and try again.'),
+                ));
+        return null;
+      });
       if (googleUser == null) return;
       _user = googleUser;
       final googleAuth = await googleUser.authentication;

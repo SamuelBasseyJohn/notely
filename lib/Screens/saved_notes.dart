@@ -12,7 +12,7 @@ import '../Widgets/buttons.dart';
 import '../Widgets/drawer.dart';
 import '../Widgets/text.dart';
 import 'EditingPages/note_editing_page.dart';
-import 'note_taking_page.dart';
+import 'EditingPages/note_taking_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SavedNotes extends StatefulWidget {
@@ -33,7 +33,8 @@ class _SavedNotesState extends State<SavedNotes> {
   @override
   Widget build(BuildContext context) {
     IsFavoriteProvider provider = Provider.of<IsFavoriteProvider>(context);
-    final username = FirebaseAuth.instance.currentUser!.displayName!.split(" ");
+    List<String>? username =
+        FirebaseAuth.instance.currentUser!.displayName!.split(" ");
     final firstName = username[0];
 
     return Scaffold(
@@ -57,12 +58,9 @@ class _SavedNotesState extends State<SavedNotes> {
         ),
         //
         centerTitle: false,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: MyText(
-            input: "All Notes",
-            fontSize: 32,
-          ),
+        title: MyText(
+          input: "All Notes",
+          fontSize: 32,
         ),
         actions: [
           // MyButton(
@@ -296,27 +294,38 @@ class _SavedNotesState extends State<SavedNotes> {
                 );
               }
             }
-            return Column(
-              // mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 30,
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                // mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: MyText(input: "Hello $firstName,", fontSize: 23),
+                  ),
+                  Expanded(
+                    flex: 6,
                     child: Center(
-                      child: MyText(input: "Hello $firstName", fontSize: 23),
+                        child:
+                            Image.asset("Images/Design-inspiration-pana.png")),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: MyText(
+                          input: "Create your first note!", fontSize: 20),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Center(
-                      child: Image.asset("Images/Design-inspiration-pana.png")),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                MyText(input: "Create your first note!", fontSize: 20),
-              ],
+                  const Spacer(
+                    flex: 2,
+                  )
+                ],
+              ),
             );
           },
         ),
@@ -326,13 +335,13 @@ class _SavedNotesState extends State<SavedNotes> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const NoteTakingPage(),
-            ),
+            CupertinoPageRoute(
+                builder: (context) => const NoteTakingPage(),
+                fullscreenDialog: true),
           );
         },
         elevation: 15,
-        backgroundColor: HexColor("37474F"),
+        backgroundColor: HexColor("FA5B3D"),
         child: const Icon(
           Icons.post_add_rounded,
           size: 30,

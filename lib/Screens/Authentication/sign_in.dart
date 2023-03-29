@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors
-import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_notes_app/Screens/Authentication/create_account.dart';
@@ -86,7 +85,7 @@ class _LoginState extends State<Login> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 25.0),
                                 child: MyText(
-                                  input: "Login",
+                                  input: "Sign in",
                                   color: "000000",
                                   fontSize: 35,
                                 )),
@@ -255,13 +254,12 @@ class _LoginState extends State<Login> {
                   onPressed: () async {
                     final provider = Provider.of<GoogleSignInProvider>(context,
                         listen: false);
-                    await provider.googleLogIn();
+                    await provider.googleLogIn(context);
                     // ignore: unnecessary_null_comparison
                     if (provider.user != null && context.mounted) {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          CupertinoPageRoute(
-                              builder: (context) => SavedNotes()),
+                          MaterialPageRoute(builder: (context) => SavedNotes()),
                           (route) => false);
                     }
                   },
